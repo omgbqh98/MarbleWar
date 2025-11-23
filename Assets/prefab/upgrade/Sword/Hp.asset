@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39779006b6a9fe147b146b164a08bcea, type: 3}
+  m_Name: Hp
+  m_EditorClassIdentifier: 
+  title: Common
+  description: +10% HP
+  icon: {fileID: 21300000, guid: 52b7e1f8428667244a6e8eee15ca09a0, type: 3}
+  applyToAllUnitTypes: 0
+  targetUnitType: 0
+  modifier:
+    flatMaxHP: 0
+    flatArmor: 0
+    flatDamage: 0
+    flatCrit: 0
+    flatAttackSpeed: 0
+    flatAttackSpeedBow: 0
+    flatAttackRange: 0
+    flatMoveSpeed: 0
+    percentMaxHP: 10
+    percentArmor: 0
+    percentDamage: 0
+    percentCrit: 0
+    percentAttackSpeed: 0
+    percentAttackSpeedBow: 0
+    percentAttackRange: 0
+    percentMoveSpeed: 0
+  oneTimeOnly: 1
