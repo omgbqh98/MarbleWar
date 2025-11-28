@@ -6,8 +6,6 @@ public class Unit : MonoBehaviour
 {
     public Base Base;
     public Sprite spriteVukhi;
-    public int maxRow;
-    public int maxCol;
     public int expWhenDie = 5;
     UnitStats unitStats;
     [HideInInspector] public GameObject prefabReference;

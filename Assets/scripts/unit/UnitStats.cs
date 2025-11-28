@@ -5,6 +5,9 @@ public class UnitStats : MonoBehaviour
 {
     [Header("Loại unit")]
     public UnitType unitType;
+    public int maxRow = 4;
+    public int maxCol = 4;
+    public float spacing = 0.25f;
 
     [Header("HP & Phòng ngự")]
     public float maxHP = 100;
@@ -15,11 +18,15 @@ public class UnitStats : MonoBehaviour
     public float damage = 10;
     public float critChance = 0.1f;   // 10%
     public float attackSpeed = 1.0f;   // lần/giây
-    public float attackSpeedBow = 3.0f;   // lần/giây
     public float attackRange = 1.5f;  // 0-1.5 cận; > tầm bắn
 
     [Header("Di chuyển")]
     public float moveSpeed = 0.5f;
+
+    [Header("Range")]
+    public int bullet1Time = 1; // Tối đa mũi tên bắn ra một lần (tỉ lệ 3 mũi tên)
+    public float attackSpeedBow = 3.0f;   // lần/giây
+
 
     public void ApplyModifier(StatModifier mod)
     {

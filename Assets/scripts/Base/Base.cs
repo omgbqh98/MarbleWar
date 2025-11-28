@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using System.Collections.Generic;
+using System.Collections;
 
 public class Base : MonoBehaviour
 {
@@ -8,7 +9,8 @@ public class Base : MonoBehaviour
     public bool isPlayerControlled = false;
     public Color baseColor;
     public int teamID;
-
+    public int gold;
+    public TMP_Text goldLabel;
     private readonly List<Unit> _units = new();
     public IReadOnlyList<Unit> Units => _units;
 
@@ -45,6 +47,11 @@ public class Base : MonoBehaviour
             UpdateLVLabel();
         }
     }
+    void Update()
+    {
+        if (goldLabel != null)
+            goldLabel.text = gold + "G";
+    }
 
     public void UpdateExp(int exp)
     {
@@ -52,7 +59,7 @@ public class Base : MonoBehaviour
 
         if (curentExp >= maxExp)
         {
-            //maxExp += 30;
+            maxExp += 30;
             curentExp = 0;
             currentLV++;
             OnLevelUp();
@@ -96,9 +103,44 @@ public class Base : MonoBehaviour
         }
 
         var choices = UpgradeManager.Instance.GetRandomChoicesForBase(this, prefabsToUse, UpgradeManager.Instance.choicesCount);
-        if (upgradePanel != null)
-            upgradePanel.ShowChoicesFromList(choices, this);
+
+        if (isPlayerControlled)
+        {
+            // người chơi: hiển thị panel lựa chọn
+            if (upgradePanel != null)
+                upgradePanel.ShowChoicesFromList(choices, this);
+        }
+        else
+        {
+            // AI: chọn tự động (ví dụ random). Bạn có thể thay bằng thuật toán chọn khác
+            StartCoroutine(AutoChooseForAI(choices));
+        }
     }
+
+    private IEnumerator AutoChooseForAI(List<UpgradeSO> choices)
+    {
+        if (choices == null || choices.Count == 0)
+            yield break;
+
+        // small delay để "mô phỏng" AI suy nghĩ (tùy chọn)
+        yield return new WaitForSeconds(Random.Range(0.3f, 1.0f));
+
+        // chọn random 1 nâng cấp (có thể thay bằng heuristic)
+        int idx = Random.Range(0, choices.Count);
+        var chosen = choices[idx];
+
+        // Debug.Log($"[Base][AI] Base '{name}' automatically chose upgrade '{(chosen != null ? chosen.title : "null")}'");
+
+        // Áp dụng upgrade cho Base (applyToFutureSpawns = true để lưu vào BaseUpgradeHolder)
+        UpgradeManager.Instance.ApplyUpgradeToBase(this, chosen, true);
+
+        // Optionally: update UI (SelectedListPanel) if you want to show AI's upgrades pop-up
+        if (SelectedListPanel.Instance != null)
+        {
+            SelectedListPanel.Instance.RefreshForBase(this);
+        }
+    }
+
 
     private void OnMouseDown()
     {

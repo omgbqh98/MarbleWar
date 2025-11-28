@@ -4,6 +4,6 @@ public enum UnitType
     Sword,
     Archer,
     Spear,
-    Siege,
+    Worker,
     // Thêm loại theo game của bạn
 }

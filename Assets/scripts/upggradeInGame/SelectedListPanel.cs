@@ -50,9 +50,13 @@ public class SelectedListPanel : MonoBehaviour
             return;
         }
 
-        // clear existing children
+
         for (int i = selectedContentParent.childCount - 1; i >= 0; i--)
-            DestroyImmediate(selectedContentParent.GetChild(i).gameObject);
+        {
+            Destroy(selectedContentParent.GetChild(i).gameObject);
+        }
+        Canvas.ForceUpdateCanvases();
+
 
         if (owner == null)
         {

@@ -9,9 +9,11 @@ public class UnitFocus : MonoBehaviour
     [Header("Tùy chỉnh góc quay")]
     [Tooltip("Độ lệch góc (theo độ). Dương = quay sang phải, Âm = quay sang trái.")]
     public float rotationOffset = 0f;
+    private UnitStats unitStats;
 
     void Start()
     {
+        unitStats = GetComponent<UnitStats>();
         // Nếu chưa gán, tự tìm base cha
         if (myBase == null)
             myBase = GetComponent<Unit>().Base;
@@ -19,35 +21,15 @@ public class UnitFocus : MonoBehaviour
 
     void Update()
     {
-        GameObject target = FindNearestEnemy();
+        GameObject target = TargetFinder.FindNearestTarget(transform.position, myBase, Mathf.Infinity, 0.05f);
+        if (unitStats.unitType == UnitType.Worker)
+        {
+            target = TargetFinder.FindNearestEnemySquare(transform.position, myBase, Mathf.Infinity);
+        }
         if (target != null)
         {
             RotateTowards(target);
         }
-    }
-
-    // 🔹 Tìm địch gần nhất (giống UnitMove)
-    GameObject FindNearestEnemy()
-    {
-        Unit[] allUnits = FindObjectsOfType<Unit>();
-        GameObject nearest = null;
-        float minDist = Mathf.Infinity;
-
-        foreach (Unit other in allUnits)
-        {
-            if (other == null || other.Base == null) continue;
-            if (other.Base == myBase) continue;                    // cùng Base
-            if (other.Base.teamID == myBase.teamID) continue;      // cùng team
-
-            float dist = Vector2.Distance(transform.position, other.transform.position);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                nearest = other.gameObject;
-            }
-        }
-
-        return nearest;
     }
 
     // 🔹 Quay unit về phía kẻ địch

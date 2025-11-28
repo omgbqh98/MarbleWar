@@ -90,84 +90,69 @@ public class UpgradeManager : MonoBehaviour
     }
 
 
-    // Áp dụng upgrade cho 1 Base: hiện có + save để apply cho spawns tương lai (nếu cần)
     public void ApplyUpgradeToBase(Base targetBase, UpgradeSO upgrade, bool applyToFutureSpawns = true)
     {
-        if (targetBase == null)
+        if (targetBase == null || upgrade == null)
         {
-            Debug.LogWarning("[UpgradeManager] ApplyUpgradeToBase: targetBase is null.");
-            return;
-        }
-        if (upgrade == null)
-        {
-            Debug.LogWarning("[UpgradeManager] ApplyUpgradeToBase: upgrade is null.");
+            Debug.LogWarning("[UpgradeManager] invalid args");
             return;
         }
 
-        // ensure holder exists if we want to persist stars
-        var holder = targetBase.GetComponent<BaseUpgradeHolder>();
-        if (holder == null && applyToFutureSpawns)
+        // Ensure holder exists if we want persistence
+        BaseUpgradeHolder holder = null;
+        if (applyToFutureSpawns)
         {
-            holder = targetBase.gameObject.AddComponent<BaseUpgradeHolder>();
+            holder = targetBase.GetComponent<BaseUpgradeHolder>();
+            if (holder == null) holder = targetBase.gameObject.AddComponent<BaseUpgradeHolder>();
         }
 
-        int currentStars = (holder != null) ? holder.GetStarLevel(upgrade) : 0;
+        int currentStars = holder != null ? holder.GetStarLevel(upgrade) : 0;
         int maxStars = (upgrade.maxStars <= 0) ? 5 : upgrade.maxStars;
-
-        // nếu đã max thì bỏ
         if (currentStars >= maxStars)
         {
-            Debug.Log($"[UpgradeManager] Upgrade '{upgrade.title}' already at max stars ({currentStars}).");
             return;
         }
 
-        // Nếu chúng ta muốn persist cho future spawns thì tăng sao trên holder
+        // Add star(s) to holder (if requested) — this returns actual number added
         int addedStars = 0;
         if (applyToFutureSpawns)
         {
-            // giả sử AddStar trả về số sao thực sự được thêm (ví dụ 1)
-            addedStars = holder.AddStar(upgrade); // bạn nên implement AddStar để return int
+            addedStars = holder.AddStar(upgrade, 1); // add 1 star by default
         }
         else
         {
-            // nếu không lưu cho tương lai thì ta vẫn muốn ứng xử như đã tăng 1 sao nhưng không ghi vào holder
             addedStars = 1;
         }
-
-        // bảo đảm không vượt max
-        if (currentStars + addedStars > maxStars)
-            addedStars = maxStars - currentStars;
 
         if (addedStars <= 0)
         {
             return;
         }
 
-        // 1) Apply modifier 'addedStars' lần cho tất cả unit hiện có (nếu upgrade là incremental per star)
-        //    Nếu modifier thiết kế là "mỗi sao = thêm 1 lần modifier", ta apply addedStars lần.
-        //    Nếu bạn muốn khác (ví dụ mỗi sao cộng phần trăm tổng hợp), đổi logic ApplyModifier tương ứng.
+        // Apply modifier to currently spawned units (apply addedStars times if design requires)
+        int appliedCount = 0;
         foreach (var u in targetBase.Units)
         {
             if (u == null) continue;
             var stats = u.GetComponent<UnitStats>();
             if (stats == null) continue;
-
             if (upgrade.applyToAllUnitTypes || stats.unitType == upgrade.targetUnitType)
             {
-                // apply as many times as addedStars (mỗi lần thể hiện 1 'star')
                 for (int k = 0; k < addedStars; k++)
                 {
                     stats.ApplyModifier(upgrade.modifier);
                 }
+                appliedCount++;
             }
         }
 
-        // 2) Nếu bạn lưu stars trong holder và muốn UI cập nhật ngay:
+        // Update UI (Selected list)
         if (SelectedListPanel.Instance != null)
         {
             SelectedListPanel.Instance.RefreshForBase(targetBase);
         }
     }
+
 
 
 }

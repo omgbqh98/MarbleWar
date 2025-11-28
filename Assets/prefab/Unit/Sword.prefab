@@ -308,8 +308,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Base: {fileID: 0}
   spriteVukhi: {fileID: 21300000, guid: 52b7e1f8428667244a6e8eee15ca09a0, type: 3}
-  maxRow: 3
-  maxCol: 3
   expWhenDie: 5
   prefabReference: {fileID: 0}
 --- !u!114 &-2940873090961811790
@@ -324,6 +322,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e2821b8e76fadf4b9b5beef472604dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  avoidDistance: 0.5
+  avoidCheckDistance: 1
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 16384
 --- !u!58 &6282441235968430881
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -388,15 +391,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitType: 0
+  maxRow: 3
+  maxCol: 3
+  spacing: 0.25
   maxHP: 100
   currentHP: 100
   armor: 5
   damage: 10
   critChance: 0.1
-  attackSpeed: 3
-  attackSpeedBow: 3
+  attackSpeed: 1
   attackRange: 0.3
-  moveSpeed: 0.5
+  moveSpeed: 0.3
+  bullet1Time: 1
+  attackSpeedBow: 3
 --- !u!95 &1129148854303741622
 Animator:
   serializedVersion: 5

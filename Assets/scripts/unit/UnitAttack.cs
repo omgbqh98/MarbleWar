@@ -26,7 +26,11 @@ public class UnitAttack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        GameObject target = FindNearestEnemy();
+        GameObject target = TargetFinder.FindNearestTarget(transform.position, myBase, Mathf.Infinity, 0.05f);
+        if (unitStats.unitType == UnitType.Worker)
+        {
+            target = TargetFinder.FindNearestEnemySquare(transform.position, myBase, Mathf.Infinity);
+        }
         if (target != null)
             Attack(target);
     }
@@ -38,7 +42,6 @@ public class UnitAttack : MonoBehaviour
         if (distanceToTarget < rangeDefault)
         {
             animator.speed = unitStats.attackSpeed;
-
             if (bowAttact != null)
             {
                 cooldownLeft -= Time.deltaTime;
@@ -58,31 +61,6 @@ public class UnitAttack : MonoBehaviour
         {
             animator.SetBool("isAttack", false);
         }
-    }
-
-    GameObject FindNearestEnemy()
-    {
-        Unit[] allUnits = FindObjectsOfType<Unit>();
-        GameObject nearest = null;
-        float minDist = Mathf.Infinity;
-
-        foreach (Unit other in allUnits)
-        {
-            // Bỏ qua nếu cùng Base hoặc null
-            if (other == null || other.Base == null || other.Base == myBase)
-                continue;
-
-            if (other.Base.teamID == myBase.teamID) continue;
-
-            float dist = Vector3.Distance(transform.position, other.transform.position);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                nearest = other.gameObject;
-            }
-        }
-
-        return nearest;
     }
 
     private void OnDrawGizmos()

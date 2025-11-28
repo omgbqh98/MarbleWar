@@ -15,7 +15,7 @@ public class Flast : MonoBehaviour
         renderer = GetComponent<SpriteRenderer>();
         colorReplace = renderer.color;
 
-        ownerBase = GetComponent<Unit>().Base;
+        ownerBase = GetComponent<Base>() != null ? GetComponent<Base>() : GetComponent<Unit>().Base;
     }
 
     // Update is called once per frame

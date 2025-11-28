@@ -12,14 +12,12 @@ public class BowAttact : MonoBehaviour
 
     [Header("Thông số bắn")]
     public float shootForce = 10f;          // Lực bắn mũi tên
-    public int maxArrows = 3;               // Tối đa mũi tên bắn ra một lần (tỉ lệ 3 mũi tên)
-    public float spreadAngle = 15f;         // Góc phân tán khi bắn nhiều mũi tên
-    public float lifeTimeArrow = 1f;       // Thời gian tồn tại của mũi tên
     private GameObject currentArrow;        // Biến để lưu mũi tên hiện tại
-
+    UnitStats unitStats;
     void Awake()
     {
         CreateArrow();
+        unitStats = GetComponent<UnitStats>();
     }
     void Update()
     {
@@ -39,7 +37,7 @@ public class BowAttact : MonoBehaviour
     public void ShootArrows()
     {
         // Sử dụng tỉ lệ bắn mũi tên (tối đa từ 1 đến 3 mũi tên)
-        int arrowsToShoot = 3;
+        int arrowsToShoot = unitStats.bullet1Time;
 
         for (int i = 0; i < arrowsToShoot; i++)
         {

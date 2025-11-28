@@ -14,6 +14,8 @@ public class SelectedUpgradeItem : MonoBehaviour
     [Header("Options")]
     public bool useNativeIconSize = true;
 
+    public static object Instance { get; internal set; }
+
     public void SetData(UpgradeSO up)
     {
         if (up == null) return;
